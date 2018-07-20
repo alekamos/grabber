@@ -2,17 +2,12 @@ package it.spinore.grabber.bean;
 
 public class Viewer {
 
-	private int id;
+	private int index;
 	private String element;
 	private String htmlTag;
 	
 	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
+
 	public String getElement() {
 		return element;
 	}
@@ -24,6 +19,12 @@ public class Viewer {
 	}
 	public void setHtmlTag(String htmlTag) {
 		this.htmlTag = htmlTag;
+	}
+	public int getIndex() {
+		return index;
+	}
+	public void setIndex(int index) {
+		this.index = index;
 	}
 	
 	
