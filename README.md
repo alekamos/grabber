@@ -35,12 +35,12 @@ Example:
 grabHtmlData?url=http://www.bbc.com/&instruction=htmlTag:div,Sport,2
 ```
 
-Grabber go to bbc site and do this stuff:
+Grabber goes to bbc site and do this stuff:
 1) search and list all html element "div"
 2) search and list all element containing "Sport"
 3) Go into element with assigned index 2
 
-it's an array of istruction you set instruction separated by ","
+
 
 ## Built With
 
