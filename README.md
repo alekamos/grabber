@@ -24,7 +24,7 @@ Once application is up and running you could call this service for grabbing elem
 localhost:8080/grabHtmlData
 ```
 
-This parameter allow you to navigate in html page
+These parameter allow you to navigate in html page
 ```
 url=<url>
 instruction=<arrayofInstruction>
