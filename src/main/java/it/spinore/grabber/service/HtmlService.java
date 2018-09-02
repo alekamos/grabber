@@ -100,12 +100,12 @@ public class HtmlService {
 
 			String line = null;
 			StringBuffer tmp = new StringBuffer();
-			BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream()));
+			BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream(),encoding));
 			while ((line = in.readLine()) != null) {
 				tmp.append(line);
 			}
 			
-			doc = Jsoup.parse(String.valueOf(tmp),encoding);
+			doc = Jsoup.parse(String.valueOf(tmp));
 		}else 
 			doc = Jsoup.connect(url).get();
 		
