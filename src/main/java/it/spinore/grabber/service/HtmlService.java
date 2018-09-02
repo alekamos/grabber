@@ -1,16 +1,16 @@
 package it.spinore.grabber.service;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
-
-import javax.validation.Valid;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import it.spinore.grabber.action.HtmlActions;
 import it.spinore.grabber.action.Validation;
 import it.spinore.grabber.bean.Instruction;
-import it.spinore.grabber.bean.SimpleBean;
 import it.spinore.grabber.bean.Viewer;
 
 @RestController
@@ -38,14 +37,14 @@ public class HtmlService {
 		Elements elements = null;
 
 		//Connesione tramite proxy
-//		Document doc = Jsoup.connect(url)
-//				.proxy("proxyAddress", 8080)
-//				.get();
+		//		Document doc = Jsoup.connect(url)
+		//				.proxy("proxyAddress", 8080)
+		//				.get();
 
 		//Connesione semplice
 		Document doc = Jsoup.connect(url).get();
-				
-				
+
+
 
 
 		if(index!=0 && text!=null)
@@ -77,25 +76,44 @@ public class HtmlService {
 
 	@RequestMapping("/grabHtmlData")
 	public ArrayList<Viewer> grabHtmlData(@RequestParam(value="url") String url,
-			@RequestParam(value="instruction", required=false) String[] istruzioniInput
+			@RequestParam(value="instruction", required=false) String[] istruzioniInput,
+			@RequestParam(value="encoding", required=false) String encoding
 			) throws Exception {
 
 
 		int i = 0;
 		ArrayList<Viewer> listaOut = new ArrayList<Viewer>();
 		Elements elements = null;
+		Document doc;
+		URL urlOff = new URL(url);
 
 		//Connesione tramite proxy
-//		Document doc = Jsoup.connect(url)
-//				.proxy("proxyAddress", 8080)
-//				.get();
-                
-                Document doc = Jsoup.connect(url).get();
+		//		Document doc = Jsoup.connect(url)
+		//				.proxy("proxyAddress", 8080)
+		//				.get();
 
-		elements = doc.getAllElements();
+		//		Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("proxyAddress", 8080)); // or whatever your proxy is
 
-		ArrayList<Instruction> istruzioni = Validation.getIstruzioni(istruzioniInput);
+		if(encoding!=null) {
+			HttpURLConnection uc = (HttpURLConnection) urlOff.openConnection();
+			uc.connect();
+
+			String line = null;
+			StringBuffer tmp = new StringBuffer();
+			BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream(),encoding));
+			while ((line = in.readLine()) != null) {
+				tmp.append(line);
+			}
+			
+			doc = Jsoup.parse(String.valueOf(tmp));
+		}else 
+			doc = Jsoup.connect(url).get();
 		
+		
+		
+		elements = doc.getAllElements();
+		ArrayList<Instruction> istruzioni = Validation.getIstruzioni(istruzioniInput);
+
 
 		for (Instruction instruction : istruzioni) {
 			if(instruction.getElementNumber()!=0)
@@ -105,8 +123,6 @@ public class HtmlService {
 			else if (instruction.getTriggerString()!=null)
 				elements = HtmlActions.getElementByText(elements, instruction.getTriggerString());
 		}
-
-
 
 
 
